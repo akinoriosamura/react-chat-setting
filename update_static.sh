@@ -6,4 +6,4 @@ docker stop chat-api
 docker rm chat-api
 docker-compose up -d
 echo "docker restart DONE"
-cd ../setting
+cd ../react-chat-setting

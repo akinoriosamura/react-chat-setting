@@ -1,5 +1,10 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## requirement
+```
+npm install
+```
+
 ## UI
 (material UI)[https://material-ui.com/]
 
