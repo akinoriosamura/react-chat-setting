@@ -10,13 +10,15 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      url: this.props.url,
       original_place: '',
       original_visit_time: '',
       original_budget: '',
       place: '',
       visit_time: '',
       budget: '',
-      url: '',
+      lat: '',
+      lng: '',
     };
     this.GetUserInfo = this.GetUserInfo.bind(this);
     this.updateSetting = this.updateSetting.bind(this);
@@ -25,42 +27,26 @@ export default class App extends Component {
     this.handleBudgetChange = this.handleBudgetChange.bind(this);
   }
 
-  // データ保存
-  /*
-  handleAdd(e) {
-    e.preventDefault();
-    fetch("http://localhost:3001/tasks", {
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ title: e.target.title.value })
-    })
-      .then(this.fetchTasks)
-  }
-  */
 
   componentWillMount() {
-    const url = 'https://53b94c97.ngrok.io'
-    this.setState({ url: url });
-    this.GetUserInfo(url)
+    console.log(this.state.url);
+    this.GetUserInfo(this.state.url)
   }
 
   GetUserInfo(url) {
-    fetch(url + "/users/1/places")
+    fetch(url + "users/1/places")
       .then(response => response.json())
       .then(json => {
         this.setState({ original_place: json.place });
         this.setState({ place: json.place });
       })
-    fetch(url + "/users/1/visit_times")
+    fetch(url + "users/1/visit_times")
       .then(response => response.json())
       .then(json => {
         this.setState({ original_visit_time: json.visit_time });
         this.setState({ visit_time: json.visit_time });
       })
-    fetch(url + "/users/1/budgets")
+    fetch(url + "users/1/budgets")
       .then(response => response.json())
       .then(json => {
         this.setState({ original_budget: json.budget });
@@ -91,7 +77,18 @@ export default class App extends Component {
   }
 
   updatePlace(url) {
-    fetch(url + "/users/1/places", {
+    fetch(url + "users/1/places", {
+      method: "PUT",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ place: this.state.place })
+    })
+  }
+
+  updateCurrentPlace(url) {
+    fetch(url + "users/1/places", {
       method: "PUT",
       headers: {
         'Accept': 'application/json',
@@ -102,7 +99,7 @@ export default class App extends Component {
   }
 
   updateVisitTime(url) {
-    fetch(url + "/users/1/visit_times", {
+    fetch(url + "users/1/visit_times", {
       method: "PUT",
       headers: {
         'Accept': 'application/json',
@@ -113,7 +110,7 @@ export default class App extends Component {
   }
 
   updateBudget(url) {
-    fetch(url + "/users/1/budgets", {
+    fetch(url + "users/1/budgets", {
       method: "PUT",
       headers: {
         'Accept': 'application/json',
@@ -139,6 +136,18 @@ export default class App extends Component {
     console.log("update budget");
     console.log(budget);
     this.setState({ budget });
+  }
+
+  get_geolocation() {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        this.setState({ lat: pos.coords.latitude });
+        this.setState({ lng: pos.coords.longitude });
+      },
+      err => console.log(err)
+    );
+    console.log(this.state.lat)
+    console.log(this.state.lng)
   }
 
   render() {

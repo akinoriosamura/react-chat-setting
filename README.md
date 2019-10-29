@@ -3,6 +3,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## requirement
 ```
 npm install
+npm run start
+npm run build
 ```
 
 ## UI
