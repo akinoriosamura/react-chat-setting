@@ -173,14 +173,13 @@ class App extends Component {
     console.log("class");
     console.log(classes);
     return (
-      <React.Fragment>
+      <React.Fragment >
           <CssBaseline />
-          <main>
-              <Typography component="h1" variant="h4" align="center">
-                設定
+              <Typography component="h2" variant="h4" align="center" style={{ marginTop: "3%"}} >
+                希望条件
               </Typography>
               <React.Fragment>
-                <Grid container spacing={8} justify-content='space-around' >
+                <Grid container spacing={4} justify-content='space-around' >
                   <Grid item xs={12} >
                   </Grid>
                   <Grid item xs={12} >
@@ -197,7 +196,6 @@ class App extends Component {
                   </Grid>
                 </Grid>
               </React.Fragment>
-          </main>
         </React.Fragment>
     );
   }
