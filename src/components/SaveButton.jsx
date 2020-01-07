@@ -4,17 +4,21 @@ import { makeStyles } from '@material-ui/core/styles';
 import SaveIcon from '@material-ui/icons/Save';
 
 const useStyles = makeStyles(theme => ({
-    button: {
-        margin: theme.spacing(1),
-    },
+    buttons: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+      },
+      button: {
+        marginRight: '10%',
+      },
 }));
 
 export default function IconLabelButtons(props) {
     const classes = useStyles();
 
     return (
-        <div>
-            <Button variant="contained" size="small" className={classes.button} startIcon={<SaveIcon />} onClick={() => props.updateSetting()}>
+        <div className={classes.buttons}>
+            <Button variant="contained" className={classes.button} onClick={() => props.updateSetting()}>
                 Save
             </Button>
         </div>

@@ -19,7 +19,7 @@ function renderInput(inputProps) {
                 inputRef: ref,
                 classes: {
                     root: classes.inputRoot,
-                    input: classes.inputInput,
+                    input: classes.textline,
                 },
                 ...InputProps,
             }}
@@ -86,12 +86,18 @@ function getSuggestions(value, { showEmpty = false } = {}) {
 }
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        display: 'flex',
+    textline: {
+        textAlign: 'center',
     },
-    container: {
-        flexBasis: 200,
-    }
+    candidate: {
+        marginLeft: '10%',
+        marginRight: '10%',
+    },
+    center: {
+        display: 'flex',
+        marginLeft: '10%',
+        marginRight: '10%',
+    },
 }));
 
 
@@ -99,7 +105,7 @@ export default function StationSelect(props) {
     const classes = useStyles();
 
     return (
-        <div className={classes.root}>
+        <div>
             <Downshift id="downshift-simple" >
                 {({
                     getInputProps,
@@ -121,19 +127,23 @@ export default function StationSelect(props) {
                     });
 
                     return (
-                        <div className={classes.container}>
+                        <div>
                             {renderInput({
-                                fullWidth: true,
                                 classes,
+                                className: classes.center,
                                 label: '最寄り駅',
-                                InputProps: { onBlur, onFocus },
+                                InputProps: { 
+                                    onBlur,
+                                    onFocus,
+                                },
                                 InputLabelProps: getLabelProps({ shrink: true }),
                                 inputProps,
+                                
                             })}
 
-                            <div {...getMenuProps()}>
+                            <div {...getMenuProps()} textAlign='center' >
                                 {isOpen ? (
-                                    <Paper className={classes.paper} square>
+                                    <Paper className={classes.candidate} square>
                                         {getSuggestions(inputValue).map((suggestion, index) =>
                                             renderSuggestion({
                                                 suggestion,
@@ -142,7 +152,7 @@ export default function StationSelect(props) {
                                                     onClick: () => {
                                                         props.handlePlaceChange(suggestion.label);
                                                     },
-                                                    item: suggestion.label
+                                                    item: suggestion.label,
                                                 }),
                                                 highlightedIndex,
                                                 selectedItem,

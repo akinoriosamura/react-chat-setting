@@ -8,11 +8,10 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 
 const useStyles = makeStyles(theme => ({
-  root: {
+  center: {
     display: 'flex',
-  },
-  textField: {
-    flexBasis: 200,
+    marginLeft: '10%',
+    marginRight: '10%',
   },
 }));
 
@@ -21,24 +20,22 @@ function TimePick(props) {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
-      <FormControl className={clsx(classes.textField)} noValidate>
-        <FormHelperText id="time-helper-text">訪問時間</FormHelperText>
+    <React.Fragment>
+      <FormControl className={classes.center}>
+        <FormHelperText id="time-helper-text" >訪問時間</FormHelperText>
         <Input
           id="adornment-time"
           type="time"
-          defaultValue="07:30"
+          defaultValue="12:30"
           onChange={e => props.handleVisitTimeChange(e.target.value)}
-          InputLabelProps={{
-            shrink: true,
-          }}
           aria-describedby="time-helper-text"
           inputProps={{
             step: 300, // 5 min
+            style: {textAlign: 'center'}
           }}
         />
       </FormControl>
-    </div>
+    </React.Fragment>
   );
 }
 

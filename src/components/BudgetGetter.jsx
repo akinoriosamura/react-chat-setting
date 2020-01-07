@@ -7,12 +7,12 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 
 const useStyles = makeStyles(theme => ({
-    root: {
+    center: {
         display: 'flex',
-    },
-    textField: {
-        flexBasis: 200,
-    },
+        marginLeft: '10%',
+        marginRight: '10%',
+        whiteSpace: 'nowrap',
+      },
 }));
 
 function BudgetGet(props) {
@@ -26,8 +26,8 @@ function BudgetGet(props) {
     };
 
     return (
-        <div className={classes.root}>
-            <FormControl className={clsx(classes.textField)}>
+        <div>
+            <FormControl className={classes.center}>
                 <FormHelperText id="budget-helper-text">予算</FormHelperText>
                 <Input
                     id="adornment-budget"
@@ -43,6 +43,7 @@ function BudgetGet(props) {
                     aria-describedby="budget-helper-text"
                     inputProps={{
                         'aria-label': 'budget',
+                        style: {textAlign: 'center'}
                     }}
                 />
             </FormControl>

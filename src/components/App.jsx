@@ -1,12 +1,31 @@
 import React, { Component } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import TimePick from './TimePickers';
 import StationSelect from './StationSelecters';
 import BudgetGet from './BudgetGetter';
 import SaveButton from './SaveButton';
 import { Grid } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { withStyles } from '@material-ui/styles';
+import PropTypes from 'prop-types';
+import TextField from '@material-ui/core/TextField';
 
 
-export default class App extends Component {
+
+const useStyles = makeStyles(theme => ({
+  layout: {
+    backgroundColor: '#282c34',
+    width: 'auto',
+    marginLeft: 1000,
+    marginRight: theme.spacing(2),
+  },
+}));
+
+
+
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,8 +46,7 @@ export default class App extends Component {
     this.handleBudgetChange = this.handleBudgetChange.bind(this);
   }
 
-
-  componentWillMount() {
+  componentDidMount() {
     console.log(this.state.url);
     this.GetUserInfo(this.state.url)
   }
@@ -151,22 +169,43 @@ export default class App extends Component {
   }
 
   render() {
+    const { classes } = this.props;
+    console.log("class");
+    console.log(classes);
     return (
-      <Grid container spacing={8} alignItems="center" justify="center">
-        <Grid item xs={12} >
-          <StationSelect place={this.state.place} handlePlaceChange={this.handlePlaceChange} />
-        </Grid>
-        <Grid item xs={12} >
-          <TimePick visit_time={this.state.visit_time} handleVisitTimeChange={this.handleVisitTimeChange} />
-        </Grid>
-        <Grid item xs={12} >
-          <BudgetGet budget={this.state.budget} handleBudgetChange={this.handleBudgetChange} />
-        </Grid>
-        <Grid item xs={12} >
-          <SaveButton updateSetting={this.updateSetting} />
-        </Grid>
-      </Grid>
+      <React.Fragment>
+          <CssBaseline />
+          <main>
+              <Typography component="h1" variant="h4" align="center">
+                設定
+              </Typography>
+              <React.Fragment>
+                <Grid container spacing={8} justify-content='space-around' >
+                  <Grid item xs={12} >
+                  </Grid>
+                  <Grid item xs={12} >
+                    <StationSelect place={this.state.place} handlePlaceChange={this.handlePlaceChange} />
+                  </Grid>
+                  <Grid item xs={12} >
+                    <TimePick visit_time={this.state.visit_time} handleVisitTimeChange={this.handleVisitTimeChange} />
+                  </Grid>
+                  <Grid item xs={12} >
+                    <BudgetGet budget={this.state.budget} handleBudgetChange={this.handleBudgetChange} />
+                  </Grid>
+                  <Grid item xs={12} >
+                    <SaveButton updateSetting={this.updateSetting} />
+                  </Grid>
+                </Grid>
+              </React.Fragment>
+          </main>
+        </React.Fragment>
     );
   }
 }
 
+App.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+
+export default withStyles(useStyles)(App);
