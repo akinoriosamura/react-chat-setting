@@ -10,7 +10,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { withStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
-import liffHelper from '../utils/liffHelper';
 
 
 const useStyles = makeStyles(theme => ({
@@ -22,6 +21,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const liff = window.liff;
 
 class App extends Component {
   constructor(props) {
@@ -40,25 +40,83 @@ class App extends Component {
     this.updateSetting = this.updateSetting.bind(this);
     this.handlePreferChange = this.handlePreferChange.bind(this);
     this.handleBudgetChange = this.handleBudgetChange.bind(this);
-    liffHelper.getProfile()
-    .then(profile => {
-      this.setState({ profile });
-    });
+    this.initVConsole()
+    console.log("finish constructor");
   }
 
   componentDidMount() {
+    this.LiffInit();
+    console.log(this.state.profile);
+    console.log("user ID");
+    console.log(this.state.profile.userId);
+    console.log("url");
     console.log(this.state.url);
-    this.GetUserInfo(this.state.url)
+    console.log("finish componentdidmount");
   }
 
-  GetUserInfo(url) {
-    fetch(url + "users/" + this.state.profile.userId + "/prefers")
+  initVConsole() {
+    var VConsole = require('vconsole');
+    var vConsole = new VConsole({
+        defaultPlugins: ['system', 'network', 'element', 'storage'],
+        maxLogNumber: 1000,
+        onReady: function() {
+            console.log('vConsole is ready.');
+        },
+        onClearLog: function() {
+            console.log('on clearLog');
+        }
+    });
+  }
+
+  LiffInit() {
+    console.log("liffinit in didmount");
+    liff.init(
+      data => {
+          console.log('LIFF initialized!');
+          // Now you can call LIFF API
+          const userId = data.context.userId;
+          liff.getProfile().then(pr => {
+            console.log(pr);
+            const userDisplayName = pr.displayName
+            console.info('User name is', userDisplayName);
+            const prof = pr
+            console.log(prof);
+            console.log(prof.userId);
+            this.setState({ profile: prof });
+          })
+          .catch((err) => {
+              console.error('LIFF getProfile failed', err);
+          })
+          .then(() => {
+            this.ShapeURL();
+            this.GetUserInfo();
+          })
+      },
+      err => {
+          console.error('LIFF initialization failed', err);
+      }
+    );
+  }
+
+  ShapeURL() {
+    console.log("shapeurl");
+    var reg = new RegExp("(https?://.*?/)(.*?)");
+    console.log(this.state.url.match(reg)[0]);
+    var new_url = this.state.url.match(reg)[0]
+    this.setState({ url: new_url });
+    console.log(this.state.url);
+  }
+
+  GetUserInfo() {
+    console.log("get user info");
+    console.log(this.state.url + "users/" + this.state.profile.userId + "/prefers");
+    fetch(this.state.url + "users/" + this.state.profile.userId + "/prefers")
       .then(response => response.json())
       .then(json => {
         this.setState({ original_prefer: json.prefer });
         this.setState({ prefer: json.prefer });
       })
-    fetch(url + "users/" + this.state.profile.userId + "/budgets")
+    fetch(this.state.url + "users/" + this.state.profile.userId + "/budgets")
       .then(response => response.json())
       .then(json => {
         this.setState({ original_budget: json.budget });
@@ -91,6 +149,11 @@ class App extends Component {
       },
       body: JSON.stringify({ prefer: this.state.prefer })
     })
+    .then(response => response.json())
+    .then(json => {
+      console.log("update prefer");
+      console.log(json);
+    })
   }
 
   updateBudget(url) {
@@ -101,6 +164,11 @@ class App extends Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ budget: this.state.budget })
+    })
+    .then(response => response.json())
+    .then(json => {
+      console.log("update budget");
+      console.log(json);
     })
   }
 
