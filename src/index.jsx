@@ -5,9 +5,19 @@ import App from './components/App';
 import Inquiry from './components/Inquiry';
 import * as serviceWorker from './serviceWorker';
 
+
 var url = window.location.href
+
+var VConsole = require('vconsole');
+var vConsole = new VConsole();
+console.log('vconsole Hello world');
 console.log(url);
 console.log(typeof url);
+console.log('foo');   // black word, white bakcground
+console.info('bar');  // purple word, white background
+console.debug('oh');  // orange word, white background
+console.warn('foo');  // orange word, yellow background
+console.error('bar'); // red word, pink background
 if (url.match(/inquiry/)) {
     console.log("inquiry url");
     const url = "./";
