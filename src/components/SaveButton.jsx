@@ -13,12 +13,21 @@ const useStyles = makeStyles(theme => ({
       },
 }));
 
+
 export default function IconLabelButtons(props) {
     const classes = useStyles();
+    const liff = window.liff;
 
     return (
         <div className={classes.buttons}>
-            <Button variant="contained" className={classes.button} onClick={() => props.updateSetting()}>
+            <Button
+                variant="contained"
+                className={classes.button}
+                onClick={() => {
+                    props.updateSetting();
+                    //liff.closeWindow();
+                }}
+            >
                 Save
             </Button>
         </div>

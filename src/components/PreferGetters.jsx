@@ -20,7 +20,8 @@ function PreferGet(props) {
     const [values, setValues] = React.useState({
         prefer: '',
     });
-
+    console.log("prpp prefer");
+    console.log(props.prefer);
     const handleChange = prop => event => {
         setValues({ ...values, [prop]: event.target.value });
     };
@@ -32,7 +33,6 @@ function PreferGet(props) {
                 <Input
                     id="adornment-prefer"
                     value={props.prefer}
-                    defaultValue="ラーメン"
                     onChange={
                         e => {
                             handleChange('prefer');

@@ -23,10 +23,16 @@ const useStyles = makeStyles(theme => ({
 export default function IntBudgetGet(props) {
   const classes = useStyles();
   const [values, setValues] = React.useState({
-    prefer: '',
+    budget: '',
   });
+  console.log("prpp budget");
+  console.log(props.budget);
+  //document.getElementById('default').innerText = "d_budegt";
   const handleChange = prop => event => {
+    console.log("handle budget change");
+    console.log(props.budget);
     setValues({ ...values, [prop]: event.target.value });
+    console.log(props.budget);
   };
 
   return (
@@ -41,20 +47,21 @@ export default function IntBudgetGet(props) {
           value={props.budget}
           onChange={
             e => {
-                handleChange('prefer');
+                handleChange('budget');
                 props.handleBudgetChange(e.target.value);
             }
           }
           displayEmpty
           className={classes.selectEmpty}
         >
-          <MenuItem value="">
-            <em>None</em>
+          <MenuItem>
+            <div id="default">
+            </div>
           </MenuItem>
-          <MenuItem value={1}>とても安い</MenuItem>
-          <MenuItem value={2}>安い</MenuItem>
-          <MenuItem value={3}>普通</MenuItem>
-          <MenuItem value={4}>高い</MenuItem>
+          <MenuItem value={"1"}>とても安い</MenuItem>
+          <MenuItem value={"2"}>安い</MenuItem>
+          <MenuItem value={"3"}>普通</MenuItem>
+          <MenuItem value={"4"}>高い</MenuItem>
         </Select>
       </FormControl>
     </div>

@@ -27,7 +27,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: this.props.url,
+      original_url: this.props.url,
+      url: '',
       profile: {},
       original_prefer: '',
       original_budget: '',
@@ -36,7 +37,8 @@ class App extends Component {
       lat: '',
       lng: '',
     };
-    this.GetUserInfo = this.GetUserInfo.bind(this);
+    this.GetURL();
+    //this.GetUserInfo = this.GetUserInfo.bind(this);
     this.updateSetting = this.updateSetting.bind(this);
     this.handlePreferChange = this.handlePreferChange.bind(this);
     this.handleBudgetChange = this.handleBudgetChange.bind(this);
@@ -45,14 +47,23 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.LiffInit();
-    console.log(this.state.profile);
     console.log("user ID");
     console.log(this.state.profile.userId);
     console.log("url");
     console.log(this.state.url);
     console.log("finish componentdidmount");
   }
+
+  /*
+  componentDidUpdate(prevState){
+    if (this.state.url != prevState.url) {
+      console.log("did update ");
+      console.log(prevState.url);
+      console.log(this.state.url);
+      this.GetUserInfo();
+    }
+  }
+  */
 
   initVConsole() {
     var VConsole = require('vconsole');
@@ -68,60 +79,79 @@ class App extends Component {
     });
   }
 
-  LiffInit() {
-    console.log("liffinit in didmount");
-    liff.init(
-      data => {
-          console.log('LIFF initialized!');
-          // Now you can call LIFF API
-          const userId = data.context.userId;
-          liff.getProfile().then(pr => {
-            console.log(pr);
-            const userDisplayName = pr.displayName
-            console.info('User name is', userDisplayName);
-            const prof = pr
-            console.log(prof);
-            console.log(prof.userId);
-            this.setState({ profile: prof });
-          })
-          .catch((err) => {
-              console.error('LIFF getProfile failed', err);
-          })
-          .then(() => {
-            this.ShapeURL();
-            this.GetUserInfo();
-          })
-      },
-      err => {
-          console.error('LIFF initialization failed', err);
-      }
-    );
+  GetURL() {
+    let promise = new Promise((resolve, reject) => { // #1
+      console.log('promise')
+      liff.init(
+        data => {
+            console.log('LIFF initialized!');
+            // Now you can call LIFF API
+            const userId = data.context.userId;
+            liff.getProfile().then(pr => {
+              console.log(pr);
+              const userDisplayName = pr.displayName
+              console.info('User name is', userDisplayName);
+              const prof = pr
+              console.log(prof);
+              console.log(prof.userId);
+              this.setState({ profile: prof });
+              resolve(prof.userId)
+            })
+            .catch((err) => {
+                console.error('LIFF getProfile failed', err);
+            })
+        },
+        err => {
+            console.error('LIFF initialization failed', err);
+        }
+      );
+    })
+    promise.then((userId) => { // #2
+      return new Promise((resolve, reject) => {
+        var url = this.ShapeURL(userId)
+        console.log('promise 2')
+        console.log("return url");
+        console.log(url);
+        resolve(url)
+      })
+    }).then((url) => { // #3
+      console.log('promise 3')
+      this.GetUserInfo(url)
+    })
+    console.log("get url finish");
+
   }
 
   ShapeURL() {
     console.log("shapeurl");
     var reg = new RegExp("(https?://.*?/)(.*?)");
-    console.log(this.state.url.match(reg)[0]);
-    var new_url = this.state.url.match(reg)[0]
+    console.log(this.state.original_url.match(reg)[0]);
+    var new_url = this.state.original_url.match(reg)[0];
     this.setState({ url: new_url });
-    console.log(this.state.url);
+    return new_url
   }
 
-  GetUserInfo() {
+  GetUserInfo(url) {
     console.log("get user info");
+    console.log("user profile");
+    console.log(this.state.profile);
     console.log(this.state.url + "users/" + this.state.profile.userId + "/prefers");
-    fetch(this.state.url + "users/" + this.state.profile.userId + "/prefers")
+    fetch(url + "users/" + this.state.profile.userId + "/prefers")
       .then(response => response.json())
       .then(json => {
         this.setState({ original_prefer: json.prefer });
         this.setState({ prefer: json.prefer });
       })
-    fetch(this.state.url + "users/" + this.state.profile.userId + "/budgets")
+    console.log("get user info prefer");
+    console.log(this.state.prefer);
+    fetch(url + "users/" + this.state.profile.userId + "/budgets")
       .then(response => response.json())
       .then(json => {
         this.setState({ original_budget: json.budget });
         this.setState({ budget: json.budget });
       })
+    console.log("get user info budget");
+    console.log(this.state.budget);
   }
 
   updateSetting() {
@@ -172,16 +202,16 @@ class App extends Component {
     })
   }
 
-  handlePreferChange(prefer) {
+  handlePreferChange(pref) {
     console.log("update prefer");
-    console.log(prefer);
-    this.setState({ prefer });
+    console.log(pref);
+    this.setState({ prefer: pref });
   }
 
-  handleBudgetChange(budget) {
+  handleBudgetChange(bud) {
     console.log("update budget");
-    console.log(budget);
-    this.setState({ budget });
+    console.log(bud);
+    this.setState({ budget: bud });
   }
 
   get_geolocation() {
@@ -198,7 +228,7 @@ class App extends Component {
 
   render() {
     const { classes } = this.props;
-    console.log("class");
+    console.log("app js render start");
     console.log(classes);
     return (
       <React.Fragment >
