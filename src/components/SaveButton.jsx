@@ -25,7 +25,7 @@ export default function IconLabelButtons(props) {
                 className={classes.button}
                 onClick={() => {
                     props.updateSetting();
-                    //liff.closeWindow();
+                    liff.closeWindow();
                 }}
             >
                 Save
